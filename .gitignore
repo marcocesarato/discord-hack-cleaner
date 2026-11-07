@@ -1,0 +1,14 @@
+.env
+.env.*
+*.local.json
+*.bak
+*.zip
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+coverage/
+private/
+reference-images/
+discord-cleanup-report*.json
+discord-cleanup-scan-state*.json

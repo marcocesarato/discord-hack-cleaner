@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Review a saved report · Discord Hack Cleaner</title>
+    <link rel="icon" href="../assets/icon-32.png">
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="app-page report-page">
+    <main>
+      <header class="stack">
+        <h1>Review a saved report</h1>
+        <p class="muted">
+          Open each match in Discord, verify the author and attachment, then delete it manually if needed.
+        </p>
+      </header>
+      <section class="report-section stack" aria-label="Import report">
+        <div class="file-picker">
+          <button id="choose-report">Choose JSON report</button>
+          <span id="report-name">No report selected</span>
+          <input id="report-file" type="file" accept=".json,application/json" hidden />
+        </div>
+        <p id="status" class="status" role="status">Choose a JSON report exported from Discord Hack Cleaner.</p>
+      </section>
+      <section id="viewer" class="report-section stack" aria-label="Review matches" hidden>
+        <h2 id="position"></h2>
+        <p id="date" class="muted"></p>
+        <p><a id="message-link" target="_blank" rel="noopener noreferrer">Open this message</a></p>
+        <div class="button-row">
+          <button id="previous">Open previous</button>
+          <button id="open" class="primary">Open in Discord</button>
+          <button id="next">Open next</button>
+        </div>
+        <label class="check-row"><input id="reviewed" type="checkbox" /> <span>Mark as reviewed</span></label>
+        <p class="hint">
+          The review mark records your progress. Use Discord’s message menu to delete a message.
+        </p>
+        <div class="button-row"><button id="export">Export review progress</button></div>
+        <p id="open-status" class="status" role="status"></p>
+      </section>
+    </main>
+    <script src="report-model.js"></script>
+    <script src="report-viewer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>Discord Hack Cleaner mascot with a broom</title>
+  <circle cx="64" cy="64" r="60" fill="#5865f2"/>
+  <g transform="translate(-2 -4)">
+    <path fill="#fff" d="M38 40a60 60 0 0 1 16-5l2 4a57 57 0 0 1 16 0l2-4a60 60 0 0 1 16 5c8 12 12 28 11 42a70 70 0 0 1-18 10l-5-7a46 46 0 0 0 7-4l-2-2a44 44 0 0 1-38 0l-2 2a46 46 0 0 0 7 4l-5 7a70 70 0 0 1-18-10c-1-14 3-30 11-42Z"/>
+    <ellipse cx="52" cy="66" rx="6.3" ry="7" fill="#5865f2"/>
+    <ellipse cx="76" cy="66" rx="6.3" ry="7" fill="#5865f2"/>
+  </g>
+  <g transform="rotate(31 96 87)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M96 62v26" fill="none" stroke="#5865f2" stroke-width="12"/>
+    <path d="M96 62v26" fill="none" stroke="#fff" stroke-width="6"/>
+    <path d="M90 84h12l7 18a1 1 0 0 1-1 1.5H84a1 1 0 0 1-1-1.5l7-18Z" fill="#fff" stroke="#5865f2" stroke-width="3"/>
+    <path d="M89 90h14m-13 7-2 5m8-6v6m6-5 2 5" fill="none" stroke="#5865f2" stroke-width="1.6"/>
+  </g>
+</svg>

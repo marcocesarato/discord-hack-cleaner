@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FAQ | Discord Hack Cleaner</title>
+    <link rel="icon" href="../assets/icon-32.png" />
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="app-page report-page">
+    <main>
+      <header>
+        <h1>Discord Hack Cleaner FAQ</h1>
+        <p class="muted">Account recovery, scan setup, and reviewing results.</p>
+        <p>
+          <a href="#account-recovery">Account recovery</a> · <a href="#scan-setup">Scan setup</a> ·
+          <a href="#oauth2">OAuth2 token</a> · <a href="#scan-results">Scan results</a>
+        </p>
+      </header>
+      <section id="account-recovery" class="report-section guide-section">
+        <h2>What should I do if my account was compromised?</h2>
+        <p>Start on a device you trust. Secure your accounts before cleaning up messages.</p>
+        <ol>
+          <li>
+            <strong>Secure your recovery email.</strong> Change its password, enable MFA, and remove
+            unfamiliar sessions, recovery methods, and forwarding rules.
+          </li>
+          <li>
+            <strong>Recover Discord.</strong> If the account email changed, check your previous inbox for
+            Discord’s change notification and follow its recovery instructions. If you’re locked out, file a
+            compromised account ticket. Once you have access, reset your password and review the email address
+            and phone number on the account.
+          </li>
+          <li>
+            <strong>Revoke access.</strong> In Discord User Settings, sign out unfamiliar sessions under
+            <strong>Devices</strong> and remove unfamiliar or unused integrations under
+            <strong>Authorized Apps</strong>. On mobile, open settings from your profile tab.
+          </li>
+          <li>
+            <strong>Enable MFA.</strong> Set up a passkey, security key, or authenticator where available.
+            Store backup codes somewhere secure and separate from the affected device.
+          </li>
+          <li>
+            <strong>Review other accounts used on the device.</strong> Check active sessions and connected
+            apps for your email, social networks, and messaging apps. Change reused passwords and revoke
+            suspicious sessions.
+          </li>
+        </ol>
+        <p>
+          Based on
+          <a
+            href="https://support.discord.com/hc/en-us/articles/24160905919511-My-Discord-Account-was-Hacked-or-Compromised"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Discord’s compromised account guide</a
+          >.
+          <a href="https://dis.gd/hackedaccount" target="_blank" rel="noopener noreferrer"
+            >Submit a compromised account ticket</a
+          >.
+        </p>
+      </section>
+      <section class="report-section guide-section">
+        <h2>How do I check the affected device?</h2>
+        <ol>
+          <li>
+            <strong>Remove software you don’t trust.</strong> Check unofficial Discord clients and plugins,
+            including tools such as Nightcord or Epicord if installed. Uninstall suspicious software and
+            remove browser extensions you don’t recognize. A tool’s presence alone does not identify the
+            source of the compromise.
+          </li>
+          <li>
+            <strong>Run a security scan.</strong> On Windows, open
+            <strong>Windows Security → Virus &amp; threat protection → Scan options</strong>. Run a full scan
+            and use Microsoft Defender Offline if you suspect persistent malware. Install pending system and
+            browser updates.
+          </li>
+        </ol>
+        <p>
+          <a
+            href="https://support.microsoft.com/en-gb/windows/apps/uninstall-or-remove-apps-and-programs-in-windows"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Uninstall apps in Windows</a
+          >
+          ·
+          <a
+            href="https://support.microsoft.com/en-gb/windows/security/threat-malware-protection/virus-and-threat-protection-in-the-windows-security-app"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Windows Security scan options</a
+          >
+        </p>
+      </section>
+      <section class="report-section guide-section">
+        <h2>How do I report the scam?</h2>
+        <ol>
+          <li>
+            <strong>Report messages before deleting them.</strong> Right-click the message on desktop or press
+            and hold it on mobile. Choose <strong>Report Message</strong> and select the category that fits.
+            Keep message links or screenshots if you need them for your support ticket.
+          </li>
+          <li>
+            <strong>Include unauthorized charges in your ticket.</strong> Tell Discord which transactions you
+            didn’t make when you report the account compromise.
+          </li>
+          <li>
+            <strong>Use official support channels.</strong> Ignore unsolicited DMs claiming to be Discord
+            support. Keep passwords, login codes, and payment details out of DMs.
+          </li>
+        </ol>
+        <p>
+          <a href="https://dis.gd/hackedaccount" target="_blank" rel="noopener noreferrer"
+            >Report a compromised account to Discord</a
+          >.
+        </p>
+      </section>
+      <section id="scan-setup" class="report-section guide-section">
+        <h2>How do I set up a scan?</h2>
+        <p>
+          In the scanner’s <strong>Settings</strong>, save a Discord OAuth2 access token with the user ID left
+          blank to fill it automatically. You can also enable <strong>Developer Mode</strong> in Discord,
+          copy your user ID from your profile, and save it in the scanner.
+        </p>
+        <p>
+          Choose a local time range. For exact matches, use the original reference images. Enable suspicious
+          message scanning to review rule-based flags, even without images.
+        </p>
+        <p>
+          <a
+            href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Find your Discord user ID</a
+          >
+          ·
+          <a
+            href="https://docs.discord.com/developers/topics/oauth2#authorization-code-grant"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Discord OAuth2 setup</a
+          >
+        </p>
+      </section>
+      <section id="oauth2" class="report-section guide-section">
+        <h2>How do I get an OAuth2 access token?</h2>
+        <p>
+          Personal scans and report review work without a token. Owner and moderation scans require a user
+          access token with the <code>identify</code> and <code>guilds</code> scopes.
+        </p>
+        <ol>
+          <li>
+            Create an application in the Discord Developer Portal. Register your OAuth client’s redirect URL
+            in the application’s OAuth2 settings.
+          </li>
+          <li>
+            Start the authorization code flow from your OAuth client, request <code>identify guilds</code>,
+            and sign in with the Discord account configured in the extension. Use a fresh
+            <code>state</code> and have your client verify it on return.
+          </li>
+          <li>
+            Use your OAuth client to exchange the returned code with
+            <code>grant_type=authorization_code</code> and the registered redirect URL. Keep the application
+            secret in the OAuth client.
+          </li>
+          <li>
+            Copy the response’s <code>access_token</code> into the extension’s OAuth2 field and use the Save
+            settings icon.
+          </li>
+        </ol>
+        <p>
+          <a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer"
+            >Discord Developer Portal</a
+          >
+          ·
+          <a
+            href="https://docs.discord.com/developers/topics/oauth2#authorization-code-grant"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Discord authorization code flow</a
+          >
+        </p>
+      </section>
+      <section id="scan-results" class="report-section guide-section">
+        <h2>How do I review, delete, or restore matches?</h2>
+        <p>
+          Exact matches share an attachment hash with a reference image. Suspicious messages show the reason
+          they were flagged and are available for manual review. In <strong>Results</strong>, select exact
+          matches and open them with <strong>Review selected matches</strong>. An authorized server bot
+          can remove the selected batch after you confirm it.
+        </p>
+        <p>
+          Use <strong>Saved scan</strong> to save, export, or import a checkpoint. An unfinished checkpoint
+          can be resumed. An exported report opens for review.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
