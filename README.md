@@ -18,9 +18,9 @@ When installed from this repository, the extension loads five SHA-256 hashes fro
 
 Fake celebrity giveaways impersonating MrBeast or Elon Musk, casino promotions, and crypto giveaways are examples of campaigns you can investigate. Exact matches depend on the specific attachment file. Resizing or recompressing an image can change its hash. For a variant, add the original attachment as a reference or enable **Flag suspicious messages** to check the message against the scan rules.
 
-<img src="docs/scam-example.png" alt="Fictional chat post advertising a limited-time crypto giveaway, with casino chips and a fictional example label" width="620">
+<img src="docs/scam-example.png" alt="Reconstructed Discord message with an everyone mention and four attached screenshots of a fake MrBeast profile, casino bonus, withdrawal form, and claimed crypto payout" width="620">
 
-*Fictional illustration of a crypto giveaway scam. You can add this illustration through **Add images** to try exact matching with an identical copy.*
+*Redacted reconstruction of a Discord scam post. An `@everyone` mention with image attachments can trigger **Flag suspicious messages**. An exact match requires one of the original attachment files to match a reference hash.*
 
 ## Install in Chrome or Edge
 
