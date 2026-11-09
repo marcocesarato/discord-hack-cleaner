@@ -7,12 +7,20 @@
 ## What it does
 
 - **Searches a specific incident window.** Scan messages from your account in the current server, across your servers, in DMs, or in both servers and DMs. Owner and moderation modes can review messages from all authors in one server after a permission check.
-- **Finds copies of a known scam image.** Add the original image as a reference. If a message contains several attachments, one identical attachment is enough to mark it as an exact match.
+- **Finds copies of known scam attachments.** The extension checks a small set of bundled image hashes and any reference images you add. One identical attachment is enough to mark a message as an exact match.
 - **Flags messages worth checking.** Enable optional suspicious-message detection to catch patterns such as a mass mention with an image, a scam phrase with a link, or a link to a domain you specify.
 - **Helps you work through the results.** Select exact matches in the side panel, jump directly to them for review, or use an authorized server bot to delete the selected batch.
 - **Saves your progress.** Pause or stop a long scan, resume it later, or move a checkpoint between browser profiles using a JSON export.
 
-For example, if an attacker sent a fake giveaway image between 03:00 and 08:00, select that time window, add the original image, and scan servers and DMs together. **Results** shows which conversations contained the same attachment. Optional suspicious-message detection can also surface posts that used a different image but still match one of the rules.
+## Scam image references
+
+When installed from this repository, the extension loads five SHA-256 hashes from the bundled reference catalog. It compares the original bytes of Discord attachments against that catalog and the images you add through **Add images**. Release v1.0.0 uses references supplied by the user. [Bundled reference catalog](src/reference-images.json)
+
+Fake celebrity giveaways impersonating MrBeast or Elon Musk, casino promotions, and crypto giveaways are examples of campaigns you can investigate. Exact matches depend on the specific attachment file. Resizing or recompressing an image can change its hash. For a variant, add the original attachment as a reference or enable **Flag suspicious messages** to check the message against the scan rules.
+
+<img src="docs/scam-example.png" alt="Fictional chat post advertising a limited-time crypto giveaway, with casino chips and a fictional example label" width="620">
+
+*Fictional illustration of a crypto giveaway scam. You can add this illustration through **Add images** to try exact matching with an identical copy.*
 
 ## Install in Chrome or Edge
 
@@ -27,7 +35,7 @@ After a local update, reload the extension from the Extensions page and refresh 
 
 1. On first launch, open the recovery checklist. You can reopen it through **FAQ** in the popup or the scan panel’s **Settings**.
 2. In **Settings**, leave **User ID** blank and save a Discord OAuth2 access token to fill the ID automatically. You can also paste an ID copied using Discord’s Developer Mode. [Discord’s illustrated guide](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID)
-3. Set the start and end in your browser’s local time. The scan includes the start and excludes the end. Add an original reference image for exact matching if your installation has no defaults or saved references. You can also scan for suspicious patterns without an image.
+3. Set the start and end in your browser’s local time. The scan includes the start and excludes the end. Use the bundled references or add the original attachment from your incident through **Add images**. Enable **Flag suspicious messages** to check for additional patterns.
 4. Choose a mode.
    - **Scan my messages** checks the configured author. Choose the current server, all servers, DMs, or both.
    - **Scan as server owner** verifies ownership and lets you select one server to check across all authors. **Moderation mode** is also available under **Current server** to users with **Administrator** or **Manage Messages**. Both permission checks require the optional OAuth2 setup below.
@@ -58,7 +66,7 @@ Select **Results** to open the side panel inside Discord. **Open message** colla
 
 The extension scans the conversations and message history it can load through Discord Web. Server scans cover writable text channels. The exported report records skipped channels and unverified results. Recompressed or resized images can have different hashes, and suspicious flags require human judgment.
 
-To supply private defaults in an unpacked installation, create a `reference-images.local.json` file beside `manifest.json` containing a JSON array of lowercase SHA-256 hashes. Git ignores this file. The scanner includes those defaults alongside images added in the panel.
+To add private references in an unpacked installation, create a `reference-images.local.json` file beside `manifest.json` containing a JSON array of lowercase SHA-256 hashes. Git ignores this file. The scanner combines these hashes with the bundled catalog and the images added in the panel.
 
 ## Optional OAuth2 setup
 
@@ -82,7 +90,7 @@ Use a scoped access token from the OAuth2 consent flow. Keep browser session cre
 
 ## Privacy and platform rules
 
-- The repository ships without a user ID, incident dates, reference images, or credentials. The extension stores your ID, dates, scope, chosen owned server, and reference hashes locally. Image bytes are hashed on the device and are not saved by the extension.
+- The bundled catalog contains SHA-256 hashes. The extension stores your ID, dates, scope, chosen owned server, and reference hashes locally. It hashes reference images on the device and keeps their hashes.
 - The channel cache and latest checkpoint are local. The `unlimitedStorage` permission allows larger checkpoints. Exported reports and checkpoints can contain user IDs, server and channel information, message links, and attachment hashes. Treat these exports as private.
 - The extension fetches attachment bytes from Discord’s CDN. OAuth2 verifies identity and guild access. Server bot operations use Discord’s bot API. Credentials are excluded from reports and checkpoints.
 - Review Discord’s [policy on automated user accounts](https://support.discord.com/hc/en-us/articles/115002192352-Automated-User-Accounts-Self-Bots) before using live scanning with a personal account.

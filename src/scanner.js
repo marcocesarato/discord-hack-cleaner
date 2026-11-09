@@ -2,7 +2,10 @@
   if (document.getElementById('discord-exact-audit')) return;
   const core = globalThis.DiscordAudit;
   let mode = globalThis.DiscordAuditMode === 'owner' ? 'owner' : 'user';
-  const defaultHashes = core.referenceHashes(globalThis.DiscordAuditLocalReferences ?? []);
+  const defaultHashes = [...new Set([
+    ...core.referenceHashes(globalThis.DiscordAuditBundledReferences ?? []),
+    ...core.referenceHashes(globalThis.DiscordAuditLocalReferences ?? []),
+  ])];
   const referenceHashes = new Set();
   let readingReferences = false;
   const stateModel = globalThis.DiscordScanState;

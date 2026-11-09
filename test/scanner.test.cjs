@@ -17,6 +17,7 @@ async function mountScanner({
   extraChannel = false,
   failingChannel = true,
   defaultHashes = [],
+  bundledHashes = [],
   saveCheckpointError = () => null,
   confirmClose = () => false,
 } = {}) {
@@ -71,6 +72,7 @@ async function mountScanner({
   const messagesToWorker = [];
   const context = vm.createContext({
     DiscordAuditMode: owner ? 'owner' : 'user',
+    DiscordAuditBundledReferences: bundledHashes,
     DiscordAuditLocalReferences: defaultHashes,
     URL,
     location,
@@ -456,6 +458,17 @@ test('local default images allow a scan without an upload', async () => {
   const panel = await mountScanner({ upload: false, defaultHashes: ['aa'.repeat(32)] });
   assert.ok(panel.button('1 default images'));
   await panel.button('Start scan').onclick();
+  assert.ok(panel.button('Open message'));
+});
+
+test('bundled and local references are merged without counting duplicates', async () => {
+  const storage = {};
+  const bundled = 'aa'.repeat(32);
+  const local = 'bb'.repeat(32);
+  const panel = await mountScanner({ storage, upload: false, bundledHashes: [bundled], defaultHashes: [bundled, local] });
+  assert.ok(panel.button('2 default images'));
+  await panel.button('Start scan').onclick();
+  assert.deepEqual(storage[checkpointKey].report.referenceHashes, [bundled, local]);
   assert.ok(panel.button('Open message'));
 });
 
