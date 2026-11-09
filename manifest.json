@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Discord Hack Cleaner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Find and remove scam messages sent from your Discord account after a hack or session token theft.",
   "permissions": ["activeTab", "scripting", "storage", "unlimitedStorage"],
   "host_permissions": [

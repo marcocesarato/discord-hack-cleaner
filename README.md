@@ -14,7 +14,7 @@
 
 ## Scam image references
 
-When installed from this repository, the extension loads five SHA-256 hashes from the bundled reference catalog. It compares the original bytes of Discord attachments against that catalog and the images you add through **Add images**. Release v1.0.0 uses references supplied by the user. [Bundled reference catalog](src/reference-images.json)
+The extension loads five SHA-256 hashes from the bundled reference catalog. It compares the original bytes of Discord attachments against that catalog and the images you add through **Add images**. [Bundled reference catalog](src/reference-images.json)
 
 Fake celebrity giveaways impersonating MrBeast or Elon Musk, casino promotions, and crypto giveaways are examples of campaigns you can investigate. Exact matches depend on the specific attachment file. Resizing or recompressing an image can change its hash. For a variant, add the original attachment as a reference or enable **Flag suspicious messages** to check the message against the scan rules.
 
@@ -24,7 +24,7 @@ Fake celebrity giveaways impersonating MrBeast or Elon Musk, casino promotions, 
 
 ## Install in Chrome or Edge
 
-1. Clone or download this repository and extract it.
+1. Download the extension ZIP from the [latest GitHub release](https://github.com/marcocesarato/discord-hack-cleaner/releases/latest) and extract it.
 2. Open the browser’s Extensions page and enable **Developer mode**.
 3. Choose **Load unpacked** and select the folder that contains `manifest.json`.
 4. Open Discord Web. Pin the extension if you want the launcher visible in the toolbar.
@@ -64,7 +64,7 @@ Select **Results** to open the side panel inside Discord. **Open message** colla
 
 ## What affects coverage
 
-The extension scans the conversations and message history it can load through Discord Web. Server scans cover writable text channels. The exported report records skipped channels and unverified results. Recompressed or resized images can have different hashes, and suspicious flags require human judgment.
+The extension scans the conversations and message history it can load through Discord Web. Server scans include readable text channels, including read-only channels. The exported report records skipped channels and unverified results. Recompressed or resized images can have different hashes, and suspicious flags require human judgment.
 
 To add private references in an unpacked installation, create a `reference-images.local.json` file beside `manifest.json` containing a JSON array of lowercase SHA-256 hashes. Git ignores this file. The scanner combines these hashes with the bundled catalog and the images added in the panel.
 

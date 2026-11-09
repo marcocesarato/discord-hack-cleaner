@@ -205,7 +205,7 @@
   const botStatus = group('p', 'hint');
   let botReady = false;
   let reviewQueue = null;
-  const scopeHint = el('p', 'Server scans include text channels where you can post.');
+  const scopeHint = el('p', 'Server scans include text channels you can read.');
   scopeHint.className = 'hint';
   const account = el('input');
   account.id = 'discord-user-id';
@@ -1251,13 +1251,15 @@
           .filter(Boolean),
       ),
     ].sort();
-  function writeEvidence(route) {
-    const main = document.querySelector('main, [role="main"]');
+  function channelType(route) {
+    if (route.startsWith('/channels/@me/')) return 'text';
+    const main = core.pageRoute(location.pathname) === route
+      ? document.querySelector('main, [role="main"]') : null;
     const anchor = [
       ...document.querySelectorAll('nav a[href], [role="navigation"] a[href], #channels a[href]'),
     ].find((a) => core.route(a.getAttribute('href')) === route);
     // Inspect channel navigation/header only: message bodies cannot supply channel evidence.
-    const labels = [
+    return core.channelType([
       anchor?.getAttribute('aria-label') || '',
       ...Array.from(
         anchor?.querySelectorAll('[aria-label],title') || [],
@@ -1267,23 +1269,7 @@
         main?.querySelectorAll('header [aria-label], [role="banner"] [aria-label]') || [],
         (n) => n.getAttribute('aria-label') || '',
       ),
-    ].join(' ');
-    const textChannel =
-      /\b(?:canale testuale|text channel|testo|text)\b/i.test(labels) &&
-      !/\b(?:canale vocale|voice channel|forum|thread|stage)\b/i.test(labels);
-    const editors = [
-      ...document.querySelectorAll(
-        '[class*="channelTextArea"] [role="textbox"], [class*="channelTextArea"] [data-slate-editor="true"]',
-      ),
-    ].filter((n) => !n.closest('[id^="chat-messages-"]') && n.getClientRects().length > 0);
-    const editor = editors.find((n) => n.getAttribute('contenteditable') === 'true') || editors[0];
-    return {
-      textChannel,
-      editorPresent: !!editor,
-      editable: !!editor && editor.getAttribute('contenteditable') === 'true',
-      disabled:
-        !editor || editor.hasAttribute('disabled') || !!editor.closest('[aria-disabled="true"], [inert]'),
-    };
+    ]);
   }
   function rows(route, nodes = document.querySelectorAll('[id^="chat-messages-"]')) {
     const channelId = route?.split('/')[3];
@@ -2022,6 +2008,7 @@
         report.unverified.push(...batch.issues);
         const queue = batch.routes.filter((route) => core.inScope(route, selectedScope, currentServer));
         const queued = new Set(queue);
+        let expandedQueue = false;
         for (const route of queue) if (!visited.has(route)) pending.add(route);
         checkpoint.pending = [...pending];
         void saveCheckpoint();
@@ -2034,7 +2021,16 @@
           try {
             const prefix = `${batch.label} · Channel ${q + 1}/${queue.length}`;
             status.textContent = `${prefix} · Opening…`;
-            if (core.pageRoute(location.pathname) !== route && !(await driver.open(route, { textOnly: true }))) {
+            const initialType = channelType(route);
+            const opened = initialType !== 'other' && (
+              core.pageRoute(location.pathname) === route || await driver.open(route, { textOnly: true })
+            );
+            const type = initialType || channelType(route);
+            if (type === 'other') {
+              report.channels.push({ route, status: 'Skipped · Channel is not a text channel' });
+              continue;
+            }
+            if (!opened) {
               if (running) report.channels.push({ route, status: 'Unverified · Could not open channel' });
               continue;
             }
@@ -2044,7 +2040,8 @@
               report.channels.push({ route, status: 'Unverified · Channel navigation failed' });
               continue;
             }
-            if (q === 0 && !onlyRoute) {
+            if (!expandedQueue && !onlyRoute) {
+              expandedQueue = true;
               for (const discovered of routes()) {
                 if (
                   discovered.split('/')[2] !== route.split('/')[2] ||
@@ -2056,25 +2053,6 @@
                 queue.push(discovered);
                 pending.add(discovered);
                 checkpoint.pending = [...pending];
-              }
-            }
-            if (!route.startsWith('/channels/@me/')) {
-              let evidence = writeEvidence(route);
-              for (
-                let attempt = 0;
-                attempt < 3 && !core.writableTextChannel(evidence) && running;
-                attempt++
-              ) {
-                await pause(500);
-                evidence = writeEvidence(route);
-              }
-              if (!core.writableTextChannel(evidence)) {
-                report.channels.push({
-                  route,
-                  status: 'Skipped · Could not verify a writable text channel',
-                  writeEvidence: evidence,
-                });
-                continue;
               }
             }
             let reason = 'Incomplete · Reached the history scroll limit';
@@ -2106,10 +2084,6 @@
                 reason = 'Stopped · Channel changed';
                 break;
               }
-              if (!route.startsWith('/channels/@me/') && !core.writableTextChannel(writeEvidence(route))) {
-                reason = 'Stopped · Posting permission could not be verified';
-                break;
-              }
               status.textContent = `${prefix} · Scanning messages · ${checkedHere} in range`;
               const candidates = resumedFrom ? messages.filter((row) => BigInt(row.id) < resumedFrom) : messages;
               const checkedPage = await processRows(candidates, route, activeRoute, source);
@@ -2129,7 +2103,8 @@
                 checkpoint.cursorCounts[route] = checkedHere;
                 void saveCheckpoint();
               }
-              if (document.querySelector('main [class*="channelWelcome"], main [class*="beginningChannel"]')) {
+              if ((type === 'text' || messages.length) &&
+                  document.querySelector('main [class*="channelWelcome"], main [class*="beginningChannel"]')) {
                 reason = 'Reached the beginning of the channel';
                 break;
               }
@@ -2191,7 +2166,7 @@
         (count, channel) => count + (channel.messagesInWindow || 0),
         0,
       );
-      status.textContent = `${!running ? 'Scan stopped' : pending.size ? 'Scan incomplete · resume pending channels' : 'Scan finished'} · ${report.channels.length} conversations attempted · ${excluded} skipped by posting check · ${messagesInWindow} messages in range. Export the report for coverage details.`;
+      status.textContent = `${!running ? 'Scan stopped' : pending.size ? 'Scan incomplete · resume pending channels' : 'Scan finished'} · ${report.channels.length} conversations checked · ${excluded} channels skipped · ${messagesInWindow} messages in range. Export the report for coverage details.`;
     } catch (e) {
       status.textContent = 'Scan interrupted. ' + e.message;
       report.unverified.push({ reason: e.message });

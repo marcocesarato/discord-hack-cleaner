@@ -72,15 +72,12 @@ test('current scope excludes other servers and DMs even when discovered later', 
   a.equal(c.inScope('/channels/@me/123', 'current', '111'), false);
   a.equal(c.inScope('/channels/111/123', 'current'), false);
 });
-test('server eligibility requires text channel and an explicitly enabled composer', () => {
+test('channel labels distinguish text from voice and ambiguous names', () => {
   const c = scope.DiscordAudit;
-  const allowed = { textChannel: true, editorPresent: true, editable: true, disabled: false };
-  a.equal(c.writableTextChannel(allowed), true);
-  for (const property of ['textChannel', 'editorPresent', 'editable'])
-    a.equal(c.writableTextChannel({ ...allowed, [property]: false }), false);
-  a.equal(c.writableTextChannel({ ...allowed, disabled: true }), false);
-  a.equal(c.writableTextChannel({ ...allowed, textChannel: undefined }), false);
-  a.equal(c.writableTextChannel({ ...allowed, disabled: undefined }), false);
+  a.equal(c.channelType(['forum (text channel)']), 'text');
+  a.equal(c.channelType(['annunci (canale di annunci)']), 'text');
+  a.equal(c.channelType(['text (voice channel)']), 'other');
+  a.equal(c.channelType(['voice-chat']), null);
 });
 test('deletion plan contains only verified unique message links and matching evidence', () => {
   const c = scope.DiscordAudit,

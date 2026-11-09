@@ -183,9 +183,14 @@ globalThis.createAuditDOMDriver = (
       if (!find()) await traverse(server === '@me' ? dmBar : channelBar, () => {}, find, server !== '@me');
       const anchor = find();
       if (!anchor || !active()) return false;
-      const label = anchor.getAttribute('aria-label') || '';
-      if (textOnly && server !== '@me' && /\((?:canale vocale|voice channel)\)/i.test(label)) {
-        throw Error('Voice channel skipped');
+      if (textOnly && server !== '@me') {
+        const labels = [
+          anchor.getAttribute('aria-label'),
+          ...Array.from(anchor.querySelectorAll('[aria-label],title'), (node) =>
+            node.getAttribute('aria-label') || node.textContent,
+          ),
+        ];
+        if (core.channelType(labels) === 'other') return false;
       }
       anchor.scrollIntoView({ block: 'nearest' });
       anchor.click();

@@ -76,13 +76,16 @@ globalThis.DiscordAudit = Object.freeze({
     const dm = route.startsWith('/channels/@me/');
     return scope === 'both' || (scope === 'dm' ? dm : !dm);
   },
-  writableTextChannel(evidence) {
-    return (
-      evidence.textChannel === true &&
-      evidence.editorPresent === true &&
-      evidence.editable === true &&
-      evidence.disabled === false
-    );
+  channelType(labels) {
+    for (const label of labels) {
+      const text = String(label || '').trim().toLowerCase();
+      const kind = text.match(/\(([^()]+)\)$/)?.[1] || text;
+      if (/^(?:text channel|announcement channel|canale testuale|canale di annunci|textkanal|ankündigungskanal)$/.test(kind))
+        return 'text';
+      if (/^(?:voice channel|stage channel|forum channel|thread|forum|canale vocale|canale palco|canale forum|sprachkanal|bühnenkanal)$/.test(kind))
+        return 'other';
+    }
+    return null;
   },
   deletionPlan(matches, reference, window, author) {
     return this.resultPlan(matches, reference, window, author, false);

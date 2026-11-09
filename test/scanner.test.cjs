@@ -13,6 +13,8 @@ async function mountScanner({
   upload = true,
   configure = true,
   owner = false,
+  readOnly = false,
+  channelLabel = 'text channel',
   secondMatch = false,
   extraChannel = false,
   failingChannel = true,
@@ -108,11 +110,11 @@ async function mountScanner({
         if (selector.startsWith('nav a'))
           return [
             {
-              getAttribute: (attr) => (attr === 'href' ? matchRoute : 'text channel'),
+              getAttribute: (attr) => (attr === 'href' ? matchRoute : channelLabel),
               querySelectorAll: () => [],
             },
           ];
-        if (selector.includes('channelTextArea'))
+        if (!readOnly && selector.includes('channelTextArea'))
           return [
             {
               closest: () => null,
@@ -393,6 +395,25 @@ test('owner mode scans all authors in the selected owned server only', async () 
   assert.equal(new URL(panel.button('Open message').href).pathname.split('/')[2], '111');
   assert.ok(panel.controls.some((node) => node.children.includes('Other author')));
   assert.equal(panel.button('Delete selected with bot…').hidden, true);
+});
+
+test('server scan checks readable text history without a message composer', async () => {
+  const storage = {};
+  const panel = await mountScanner({ owner: true, readOnly: true, storage });
+  await panel.button('Load owned servers').onclick();
+  await panel.button('Start scan').onclick();
+  assert.equal(storage[checkpointKey].report.matches.length, 1);
+  assert.equal(storage[checkpointKey].report.channels[0].messagesInWindow, 1);
+});
+
+test('server scan skips an explicitly identified voice channel', async () => {
+  const storage = {};
+  const panel = await mountScanner({ owner: true, channelLabel: 'General (voice channel)', storage });
+  await panel.button('Load owned servers').onclick();
+  await panel.button('Start scan').onclick();
+  assert.deepEqual(panel.visited, []);
+  assert.equal(storage[checkpointKey].report.matches.length, 0);
+  assert.match(storage[checkpointKey].report.channels[0].status, /^Skipped/);
 });
 
 test('a completed scan displays saved matches when the panel opens', async () => {
